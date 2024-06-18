@@ -1,7 +1,7 @@
 import { DeleteObjectCommand, GetObjectCommand, S3Client } from '@aws-sdk/client-s3';
 import { GetTranscriptionJobCommand, StartTranscriptionJobCommand, TranscribeClient } from '@aws-sdk/client-transcribe';
 
-export function getClient() {
+function getClient() {
     return new TranscribeClient({
         region: "ap-south-1",
         credentials: {
@@ -76,7 +76,37 @@ async function getTranscriptionJob(filename) {
     }
     
 
-
+    async function deleteTranscriptionFiles(filename) {
+        setTimeout(async() => {
+            console.log('Deleting transcription files');
+            const s3client = new S3Client({
+                region: "ap-south-1",
+                credentials: {
+                    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+                    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+                },
+            });
+            
+            const deleteObjectCommand = new DeleteObjectCommand({
+                Bucket: process.env.BUCKET_NAME,
+                Key: filename,
+            });
+            
+            const deleteTranscriptionObjectCommand = new DeleteObjectCommand({
+                Bucket: process.env.BUCKET_NAME,
+                Key: filename + '.transcription',
+            });
+            
+            try {
+                await s3client.send(deleteObjectCommand);
+                await s3client.send(deleteTranscriptionObjectCommand);
+                console.log('Deleted transcription files');
+            } catch (err) {
+                // Handle error
+                console.log(err);
+            }
+        }, 1000 * 60 * 30);
+        }
 
 
 export async function GET(req) {
@@ -120,34 +150,3 @@ export async function GET(req) {
     return Response.json(null)
 }
 
-async function deleteTranscriptionFiles(filename) {
-    setTimeout(async() => {
-        console.log('Deleting transcription files');
-        const s3client = new S3Client({
-            region: "ap-south-1",
-            credentials: {
-                accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-                secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-            },
-        });
-        
-        const deleteObjectCommand = new DeleteObjectCommand({
-            Bucket: process.env.BUCKET_NAME,
-            Key: filename,
-        });
-        
-        const deleteTranscriptionObjectCommand = new DeleteObjectCommand({
-            Bucket: process.env.BUCKET_NAME,
-            Key: filename + '.transcription',
-        });
-        
-        try {
-            await s3client.send(deleteObjectCommand);
-            await s3client.send(deleteTranscriptionObjectCommand);
-            console.log('Deleted transcription files');
-        } catch (err) {
-            // Handle error
-            console.log(err);
-        }
-    }, 1000 * 60 * 30);
-    }

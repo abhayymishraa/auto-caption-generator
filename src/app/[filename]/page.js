@@ -1,7 +1,7 @@
 'use client';
 
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { clearTranscriptionItems } from "../../libs/awsTranscriptionHelpers";
 import { FaSpinner } from "react-icons/fa";
 import TranscriptionEditor from "../../components/TranscriptionEditor";
@@ -24,7 +24,7 @@ export default function Filename({ params }) {
   }, [filename])
 
 
-  function getTranscription() {
+  const getTranscription = useCallback(() => {
     setIsFetchingInfo(true);
     axios.get(`/api/transcribe?filename=${filename}`).then((response) => {
       setIsFetchingInfo(false);
@@ -38,8 +38,8 @@ export default function Filename({ params }) {
         setIsTranscribing(false);
         setAwsTranscriptionItems(clearTranscriptionItems(transcription.results.items));
       }
-    })
-  }
+    });
+  }, [filename]);
 
 
 

@@ -5,7 +5,7 @@ import UploadButton from "../components/UploadButton";
 import { useState, useEffect } from "react";
 
 
-export default function page() {
+export default function Page() {
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
