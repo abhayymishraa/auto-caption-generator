@@ -17,13 +17,14 @@ This project aims to simplify the captioning process, making it easier for conte
 
 1. Clone the repository: `git clone https://github.com/your-username/auto-caption-generator.git`
 2. Install dependencies: `npm install`
-3. Configure AWS credentials and services (Transcribe and S3)
-4. Start the development server: `npm run dev`
-5. Open `http://localhost:3000` in your browser
+3. Copy .enc.example to env
+4. Configure AWS credentials and services (Transcribe and S3)
+5. Start the development server: `npm run dev`
+6. Open `http://localhost:3000` in your browser
 
 ## Contributing
 
-Contributions are welcome! Please follow the guidelines outlined in the [CONTRIBUTING.md](CONTRIBUTING.md) file.
+Contributions are welcome!
 
 ## License
 
